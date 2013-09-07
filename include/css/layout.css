@@ -1,0 +1,115 @@
+*{
+	font-family:arial;
+	font-size:14px;
+}
+a:ACTIVE,
+a:LINK,
+a:VISITED{
+	text-decoration: none;
+}
+body{
+	margin:0;
+}
+img{
+	border:0;
+}
+#header,#footer{
+	background-color:#f5f5f5;	
+}
+#middle-header,#middle-footer{
+	position: relative;
+	width:990px;
+	margin:0 auto;
+}
+#middle-header{
+	height:100px;
+}
+#middle-footer{
+	height:120px;
+}
+#middle-content{
+	width:980px;
+	max-width:999px;
+	padding:10px;
+	min-height:600px;
+	margin:0 auto;
+}
+#menu{
+	width:100%;
+	background-color:#313131;
+}
+#menu-middle{
+	width:990px;
+	margin:0 auto;
+}
+#menu-middle a{
+	padding: 10px 15px;
+	font-size: 16px;
+	color: white;
+	display: inline-block;
+}
+#menu-middle a:hover{
+	background-color: #21aaff;
+	-webkit-transition: background-color 200ms linear;
+	-moz-transition: background-color 200ms linear;
+	-o-transition: background-color 200ms linear;
+	-ms-transition: background-color 200ms linear;
+	transition: background-color 200ms linear;
+}
+#lista-empresas{
+	width: 100%;
+	margin:0 auto;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+#lista-empresas tr th{
+	background-color: #313131;
+	color: white;
+	font-size: 14px;
+	font-weight: normal;
+}
+#lista-empresas tr td{
+	font-size:13px
+}
+#lista-empresas tr th,#lista-empresas tr td{
+	border: 1px solid lightgray;
+	padding: 0 5px;
+	line-height: 35px;
+}
+#paginacao{
+	text-align: center;
+	margin-bottom:10px;
+}
+#paginacao a{
+	display: inline-block;
+	border: 1px solid lightgray;
+	width: 22px;
+	line-height: 20px;
+	text-align: center;
+	border-radius: 5px;
+	color: white;
+	background-color: #696969;
+	box-shadow: 0 1px 5px lightgray;
+	font-size: 10px;
+}
+#paginacao a:hover{
+	background-color: #21aaff;
+	-webkit-transition: background-color 200ms linear;
+	-moz-transition: background-color 200ms linear;
+	-o-transition: background-color 200ms linear;
+	-ms-transition: background-color 200ms linear;
+	transition: background-color 200ms linear;
+}
+.page-title{
+	font-size: 20px;
+	margin-top: 0;
+	font-weight: bold;
+}
+.link-view{
+	text-align: center !important;
+}
+.link-view a img{
+	width:30px;
+	height:30px;
+	display:inline-block;
+}
