@@ -1,6 +1,6 @@
 <?php 
 	include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Empresa.php';
-	
+//teste samuel	
 	$ch = !empty($_GET['ch']) ? $_GET['ch'] : 'a';
 	$empresa = new Empresa();
 	$response = $empresa->getEmpresas($ch);
