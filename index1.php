@@ -29,14 +29,17 @@ while ($zip_entry1 = zip_read($zip1)){
 						$numeroConta = (string)$row->PlanoConta->NumeroConta;
 						$conta = (int)substr($numeroConta, 0, 1);
 
+						if ($conta != 3)
+							continue;
+
 						//echo $numeroConta;
 						//exit;
 
 						$new_content[$conta][$numeroConta] = $row;
 
-						echo '<pre>';
+						/*echo '<pre>';
 						print_r($row);
-						echo '</pre>';
+						echo '</pre>';*/
 
 
 						/*$codigoTipoIF = (int)$row->PlanoConta->VersaoPlanoConta->CodigoTipoInformacaoFinanceira;
@@ -100,6 +103,8 @@ $titles_contas = array(
 );
 ?>
 
+<?php
+/*
 <ul class="nav nav-tabs" id="myTab">
 	<?php
 	foreach ($num_contas as $num):
@@ -109,7 +114,8 @@ $titles_contas = array(
 	endforeach;
 	?>
 </ul>
- 
+*/
+?> 
 
 
 <div id="myTabContent" class="tab-content">
