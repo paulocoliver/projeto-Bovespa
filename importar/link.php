@@ -7,13 +7,13 @@ $link 	 = new Link();
 $empresa = new Empresa();
 
 $lista    = $link->getLista();
-$empresas = $empresa->getEmpresas($lista[$step]);
+$empresas = $empresa->getEmpresas($lista[$step], true);
 
 foreach($empresas AS $empresa):
 	$output = $link->getOutput($empresa->cvm);
 	$link->inserir($output,$empresa->cvm);
-	//$link->visualizar($output);
-	//exit;
+//	$link->visualizar($output);
+//	exit;
 endforeach;
 
 $step++;

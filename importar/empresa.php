@@ -14,7 +14,4 @@ if($step < count($lista)){
 	header("Location: {$_SERVER['SCRIPT_NAME']}?step=$step");
 }
 
-/*
- * falha nas iniciais ( C )
- * */
 die('Processo concluido!');

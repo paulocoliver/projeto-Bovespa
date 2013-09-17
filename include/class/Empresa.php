@@ -3,14 +3,14 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Base.php';
 
 class Empresa extends Base{
 
-	public function getEmpresas($ch = 'A'){
+	public function getEmpresas($ch = 'A', $importar = false){
 		
 		$mysqli = new mysqli($this->_domain, $this->_user, $this->_password, 'projeto_db');
 		if (mysqli_connect_errno()) {
 		    throw new Exception("Connect failed: %s\n", mysqli_connect_error());
 		}
 		
-		$sql = "SELECT * FROM empresa WHERE count_links > 0";
+		$sql = "SELECT * FROM empresa WHERE ".($importar ? "situacao_registro not like '%Cancelado%'" : 'count_links > 0');
 		if($ch){
 			$sql .= " AND nome like '$ch%'";
 		}
@@ -35,7 +35,7 @@ class Empresa extends Base{
 		}
 		
 		$sql = "SELECT * FROM empresa WHERE cvm = $cvm";
-		$result 	= $mysqli->multi_query($sql);
+		$result = $mysqli->multi_query($sql);
 	 	
 		if($result = $mysqli->use_result()){
             return $result->fetch_object();
@@ -46,7 +46,7 @@ class Empresa extends Base{
 	public function getOutput($step = 0)
 	{
 		if ($step == 2) {
-			return parent::getOutput("http://localhost:8888/empresac.php");
+			return parent::getOutput("http://trabalho-bovespa.dev/empresac.php");
 		}
 		return parent::getOutput("http://cvmweb.cvm.gov.br/SWB/Sistemas/SCW/CPublica/CiaAb/FormBuscaCiaAbOrdAlf.aspx?LetraInicial={$this->_lista[$step]}");
 	}

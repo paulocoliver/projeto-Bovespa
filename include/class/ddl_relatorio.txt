@@ -1,0 +1,75 @@
+-- -----------------------------------------------------
+-- Table `projeto_db`.`relatorio`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`relatorio` (
+  `id_relatorio` INT NOT NULL AUTO_INCREMENT ,
+  `descricao` VARCHAR(100) NOT NULL ,
+  PRIMARY KEY (`id_relatorio`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `projeto_db`.`relatorio_empresa`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`relatorio_empresa` (
+  `id_relatorio_empresa` INT NOT NULL AUTO_INCREMENT ,
+  `cvm` INT(11) NOT NULL ,
+  `id_relatorio` INT NOT NULL ,
+  `data` DATE NOT NULL ,
+  INDEX `fk_empresa_has_tabela_tabela1_idx` (`id_relatorio` ASC) ,
+  INDEX `fk_empresa_has_tabela_empresa1_idx` (`cvm` ASC) ,
+  PRIMARY KEY (`id_relatorio_empresa`) ,
+  CONSTRAINT `fk_empresa_has_tabela_empresa1`
+    FOREIGN KEY (`cvm` )
+    REFERENCES `projeto_db`.`empresa` (`cvm` )
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_empresa_has_tabela_tabela1`
+    FOREIGN KEY (`id_relatorio` )
+    REFERENCES `projeto_db`.`relatorio` (`id_relatorio` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `projeto_db`.`coluna`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`coluna` (
+  `id_coluna` INT NOT NULL AUTO_INCREMENT ,
+  `id_relatorio` INT NOT NULL ,
+  `descricao` VARCHAR(45) NOT NULL ,
+  `tipo` ENUM('ativo','passivo') NULL ,
+  PRIMARY KEY (`id_coluna`) ,
+  INDEX `fk_coluna_relatorio1_idx` (`id_relatorio` ASC) ,
+  CONSTRAINT `fk_coluna_relatorio1`
+    FOREIGN KEY (`id_relatorio` )
+    REFERENCES `projeto_db`.`relatorio` (`id_relatorio` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `projeto_db`.`relatorio_valor`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`relatorio_valor` (
+  `id_relatorio_valor` INT NOT NULL AUTO_INCREMENT ,
+  `id_relatorio_empresa` INT NOT NULL ,
+  `id_coluna` INT NOT NULL ,
+  `valor` VARCHAR(120) NOT NULL ,
+  INDEX `fk_relatorio_empresa_has_coluna_coluna1_idx` (`id_coluna` ASC) ,
+  INDEX `fk_relatorio_empresa_has_coluna_relatorio_empresa1_idx` (`id_relatorio_empresa` ASC) ,
+  PRIMARY KEY (`id_relatorio_valor`) ,
+  CONSTRAINT `fk_relatorio_empresa_has_coluna_relatorio_empresa1`
+    FOREIGN KEY (`id_relatorio_empresa` )
+    REFERENCES `projeto_db`.`relatorio_empresa` (`id_relatorio_empresa` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_relatorio_empresa_has_coluna_coluna1`
+    FOREIGN KEY (`id_coluna` )
+    REFERENCES `projeto_db`.`coluna` (`id_coluna` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;

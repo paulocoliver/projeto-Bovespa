@@ -6,7 +6,7 @@ abstract class Base{
 	protected $_cookie 	= 'ASP.NET_SessionId=34i0whjzzittfn45sye22f45; __utma=121602778.2006470138.1377353516.1377353516.1377353516.1; __utmc=121602778; __utmz=121602778.1377353516.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); CVMWebCookie=SessionKey=98485118-f324-4cca-8532-c1b33d9061ef';
 	protected $_domain 	= 'localhost';
 	protected $_user 	= 'root';
-	protected $_password  = 'Paul0405';
+	protected $_password  = '';
 	
 	public function __construct(){
 		date_default_timezone_set('America/Sao_Paulo');
@@ -43,6 +43,7 @@ abstract class Base{
 					cvm INT(11) NOT NULL,
 					nome VARCHAR(100) NOT NULL,
 					cnpj VARCHAR(20) NOT NULL,
+					count_links int(11) NOT NULL default 0,
 					situacao_registro VARCHAR(45) NOT NULL,
 					CONSTRAINT pk_empresa PRIMARY KEY(cvm)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;

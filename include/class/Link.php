@@ -3,7 +3,7 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Base.php';
 
 class Link extends Base{
 
-	private $_data_atualizacao = '1990-01-01';
+	private $_data_atualizacao = '2010-01-01';
 	
 	public function getOutput( $cvm )
 	{
