@@ -5,6 +5,7 @@
 	<title><?php echo $titlePage ?></title>
 
 	<script type="text/javascript" src="/include/js/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="/include/js/jquery-mask.js"></script>
 	<script type="text/javascript" src="/include/js/jquery-ui-1.10.3.custom.js"></script>
 	<script type="text/javascript" src="/include/js/bootstrap.js"></script>
 
@@ -40,6 +41,7 @@
 					<ul class="nav">
 						<li class=""><a href="/index.php">Lista de Empresas</a></li>
 						<li class=""><a href="/relatorio-financeiro.php">Relatórios Financeiros</a></li>
+						<li class=""><a href="/usuario/index.php">Minha Empresa</a></li>
 					</ul>	
           		</div>
 			</div>

@@ -1,6 +1,6 @@
 <?php 
-include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Empresa.php';
-include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Link.php';
+include_once 'include/class/Bovespa/Empresa.php';
+include_once 'include/class/Bovespa/Link.php';
 
 if(!empty($_GET['cvm'])){
 	$empresa = new Empresa();

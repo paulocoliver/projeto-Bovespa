@@ -1,5 +1,5 @@
 <?php 
-include_once 'include/class/Link.php';
+include_once 'include/class/Bovespa/Link.php';
 
 
 function getFile ($url_download, $id_link, $ext) {

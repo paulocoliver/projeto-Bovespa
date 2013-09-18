@@ -1,6 +1,6 @@
 <?php 
-	include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Empresa.php';
-//teste samuel	
+	include_once 'include/class/Bovespa/Empresa.php';
+	
 	$ch = !empty($_GET['ch']) ? $_GET['ch'] : 'a';
 	$empresa = new Empresa();
 	$response = $empresa->getEmpresas($ch);
@@ -8,10 +8,9 @@
 ?>
 
 <?php 
-$titlePage = 'Lista de empresas';
-include('include/layout/header.php')
+	$titlePage = 'Lista de empresas';
+	include('include/layout/header.php')
 ?>
-
 
 <div class="container">
 	<div class="row ">
@@ -66,5 +65,4 @@ include('include/layout/header.php')
 		</div>
 	</div>
 </div>		
-
 <?php include('include/layout/footer.php');?>

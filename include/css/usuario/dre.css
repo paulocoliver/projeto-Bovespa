@@ -1,0 +1,37 @@
+#lista_dre{
+	width:100%;
+	margin:0 auto;
+}
+#lista_dre tr th,#lista_dre tr td{
+	border-spacing: 0;
+	border-collapse: collapse;
+	border:1px solid lightgray;
+}
+#lista_dre tr td{
+	padding:0 5px;
+}
+#lista_dre tr th{
+	padding:5px;
+	color:white;
+	background-color: #333333;
+}
+#adicionar-dre{
+	float: right;
+	margin-bottom: 15px;
+}
+.money{
+	margin:5px !important;
+	width:150px;
+	text-align:right;
+}
+.salvar{
+	position:absolute;
+	bottom:0;
+	right:0;
+	width:100px;
+	padding:5px 0;
+}
+#form_dre{
+	position:relative;
+	padding-bottom: 50px;
+}
