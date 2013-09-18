@@ -1,5 +1,5 @@
 <?php
-$content_new = array();
+$new_content = array();
 $zip = zip_open('files/'.$filename_open.'.WTL');
 if ($zip) {
 	while ($zip_entry = zip_read($zip)) {
@@ -27,7 +27,7 @@ if ($zip) {
 					$val_3 = !empty($val_3) ? number_format($val_3, 0, '', '.') : '';
 					$val_4 = !empty($val_4) ? number_format($val_4, 0, '', '.') : '';
 					
-					$content_new[$name][] = array(
+					$new_content[$name][] = array(
 						'data' => $data,
 						'cod_conta' => $cod_conta,
 						'title' => $title,
@@ -47,46 +47,18 @@ if ($zip) {
 ?>
 
 <?php 
-$data1 = '';
-$data2 = '';
-if (!empty($res_link->data)) {
-	$new_date = explode('-', $res_link->data);
-	
-	$data1 = $new_date[2].'/'.$new_date[1].'/'.$new_date[0];
-	$data2 = '31/12/'.($new_date[0]-1);
-}
-foreach ($content_new AS $k => $row1):
-?>
-	<table class="table table-bordered table-striped">
-		<tr>
-			<th colspan="6" style="text-align: center;"><?php echo $k ?></th>
-		</tr>
-		<tr>
-			<th style="text-align: center;">Código da Conta</th>
-			<th style="text-align: center;">Descrição da Conta</th>
-			<th style="text-align: center;"><?php //echo $data1 ?></th>
-			<th style="text-align: center;"><?php //echo $data2 ?></th>
-			<th style="text-align: center;"></th>
-			<th style="text-align: center;"></th>
-		</tr>
-	<?php 
-	foreach ($row1 AS $row2):
-	?>
-		<tr>
-			<td><?php echo $row2['cod_conta'] ?></td>
-			<td><?php echo utf8_encode($row2['title']) ?></td>
-			<td><?php echo $row2['val_1'] ?></td>
-			<td><?php echo $row2['val_2'] ?></td>
-			<td><?php echo $row2['val_3'] ?></td>
-			<td><?php echo $row2['val_4'] ?></td>
-		</tr>
-	<?php
-	endforeach; 
-	?>
-	</table>
-	<br /><br />
-<?php 
+$response = array();
+foreach ($new_content AS $k => $conta ):
+	foreach($conta AS $linha ){
+		if(((int)$linha['cod_conta']) == 3){
+			$response[] = array(
+							'codigo' => $linha['cod_conta'],
+							'val_1'  => $linha['val_1'],
+							'val_2'  => $linha['val_2'],
+							'val_3'  => $linha['val_3'],
+							'val_4'  => $linha['val_4']
+						);
+		}
+	}
 endforeach;
 ?>
-
-

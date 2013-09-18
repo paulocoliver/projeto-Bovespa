@@ -16,7 +16,7 @@ abstract class Connection{
 	}
 	
 	public function createDLL(){
-		$ddl = file_get_contents('../ddl.txt');
+		$ddl = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/include/class/ddl.txt');
 		try{
 			$this->connect();
 			$this->_mysqli->autocommit(FALSE);

@@ -15,9 +15,10 @@
 	color:white;
 	background-color: #333333;
 }
-#adicionar-dre{
-	float: right;
-	margin-bottom: 15px;
+#retornar{
+	float: left;
+	margin-bottom: 10px;
+	line-height: 30px;
 }
 .money{
 	margin:5px !important;
@@ -35,3 +36,15 @@
 	position:relative;
 	padding-bottom: 50px;
 }
+#datas-dre{
+	float:right;
+}
+#datas-dre label,#datas-dre select{
+	display:inline-block;
+	vertical-align:middle;
+	margin-bottom:10px;
+}
+#datas-dre label{
+	margin-right:10px;
+}
+

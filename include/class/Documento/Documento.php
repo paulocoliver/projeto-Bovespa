@@ -1,18 +1,47 @@
 <?php
-include_once '/../Connection/Abstract.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Connection/Abstract.php';
 
-abstract class Documento extends Connection{
+class Documento extends Connection{
 	
 	protected $_documento;
 	protected $_colunas;
+	protected $_data;
 	
 	public function __construct(){}
+	
+	public function getDescricao(){
+		
+		if(!empty($this->_documento)){
+			return $this->_documento['descricao'];
+		}
+		return '';
+	}
 	
 	public function setValue($key,$valor){
 		if(empty($this->_colunas[$key])){
 			throw new Exception("Nenhuma coluna encontrada com a chave $key");
 		}
 		$this->_colunas[$key]['valor'] = $valor;
+	}
+	
+	public function setValueByCode($codigo,$valor){
+		
+		foreach( $this->_colunas AS $key => $value ):
+			if($value['codigo'] == $codigo){
+				$this->_colunas[$key]['valor'] = $valor;
+				return;
+			}
+		endforeach;
+		
+		throw new Exception("Nenhuma coluna encontrada com a chave $codigo : $valor");
+	}
+	
+	public function setData($data){
+		if(substr($data,2,1) == '-'){
+			$this->_data = substr($data,6,4).'-'.substr($data,3,2).'-'.substr($data, 0,2);
+		}else{
+			$this->_data = $data;
+		}
 	}
 	
 	public function newDoc($id_documento){
@@ -29,7 +58,7 @@ abstract class Documento extends Connection{
 			if(!$result->num_rows){
 				throw new Exception('Documento não encontrado');
 			}
-			return $result->fetch_object();
+			return $result->fetch_assoc();
 			
 		}catch(Exception $erro){
 			die($erro->getMessage());

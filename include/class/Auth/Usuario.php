@@ -1,5 +1,5 @@
 <?php
-include_once '/../Connection/Abstract.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Connection/Abstract.php';
 
 class Auth_Usuario extends Connection{
 	

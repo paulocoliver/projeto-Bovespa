@@ -1,6 +1,6 @@
 <?php
-include_once '/../Connection/Abstract.php';
-include_once '/../simple_html/simple_html_dom.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Connection/Abstract.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/simple_html/simple_html_dom.php';
 
 abstract class Base extends Connection{
 	

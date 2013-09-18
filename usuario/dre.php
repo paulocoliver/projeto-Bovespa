@@ -2,9 +2,43 @@
 include_once 'auth.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Documento/DocumentoUsuario.php';
 
-$documento = new DocumentoUsuario();
-$documento->newDoc($auth->getUsuario('id_usuario_empresa'), 1);
+$documento = new DocumentoUsuario($auth->getUsuario('id_usuario_empresa'));
 
+if(!empty($_GET['id'])){
+	$documento->loadDoc($_GET['id']);
+}else{
+	$documento->newDoc(1);
+	if(empty($_POST)){
+		$datasEmUso = $documento->getDataEmUso();
+		$datas = array();
+		
+		for($i = 2010 ; $i <= date("Y") ; $i++ ){
+			if(!in_array("31-03-$i", $datasEmUso)){
+				$datas[]= "31-03-$i";
+			}
+			if(!in_array("30-06-$i", $datasEmUso)){
+				$datas[]= "30-06-$i";
+			}
+			if(!in_array("30-09-$i", $datasEmUso)){
+				$datas[]= "30-09-$i";
+			}
+		}
+	}
+}
+
+if(!empty($_POST)){
+	
+	if(isset($_POST['data'])){
+		$documento->setData($_POST['data']);
+		unset($_POST['data']);
+	}
+	
+	foreach($_POST AS $key => $valor){
+		$documento->setValue($key, $valor);
+	}
+	$documento->inserir();
+	header("location:/usuario/index.php");
+}
 $colunas = $documento->getColunas();
 
 $titlePage = 'DRE';
@@ -24,10 +58,23 @@ $(document).ready(function(){
 </style>
 <div class="container">
 
-	<a id="adicionar-dre" href="/usuario/index.php">Retornar</a>
-	<div style="cler:both"></div>
-	
 	<form action="" method="post" id="form_dre">
+		
+		<?php if(isset($datas)):?>
+			<div id="datas-dre">
+				<label for="data">Data</label>
+				<select name="data" id="data" required="true" >
+					<option value="">Selecionar...</option>
+					<?php foreach($datas AS $data):?>
+						<option value="<?php echo $data?>"><?php echo $data?></option>
+					<?php endforeach;?>
+				</select>
+			</div>
+		<?php endif;?>
+		
+		<a id="retornar" href="/usuario/index.php">Retornar</a>
+		<div style="cler:both"></div>
+	
 		<table id="lista_dre">
 			<tbody>
 				<tr>

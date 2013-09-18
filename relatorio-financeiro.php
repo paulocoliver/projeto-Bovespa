@@ -159,11 +159,7 @@ include('include/layout/header.php')
     			});
             });
             $("#relatorio-trimestre").html(img);
-
-
-            
         });
-        
     });
 </script>
 <?php include('include/layout/footer.php');?>

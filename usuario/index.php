@@ -2,8 +2,8 @@
 include_once 'auth.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Documento/DocumentoUsuario.php';
 
-$documento = new DocumentoUsuario();
-$lista = $documento->select(null,$auth->getUsuario('id_usuario_empresa'));
+$documento = new DocumentoUsuario($auth->getUsuario('id_usuario_empresa'));
+$lista = $documento->select();
 
 $titlePage = 'Minha Empresa';
 include_once $_SERVER['DOCUMENT_ROOT'].'/include/layout/header.php';
@@ -36,8 +36,8 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/include/layout/header.php';
 							<td><?php echo $item['id_documento_usuario_empresa']?></td>
 							<td><?php echo $item['descricao']?></td>
 							<td><?php echo $item['data']?></td>
-							<td>
-								<a href="#">Editar</a>
+							<td style="text-align:center;">
+								<a href="/usuario/dre.php?id=<?php echo $item['id_documento_usuario_empresa']?>">Editar</a>
 							</td>
 						</tr>
 			<?php 

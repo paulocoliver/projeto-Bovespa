@@ -1,74 +1,90 @@
 <?php
-include_once 'Abstract.php';
+include_once 'Documento.php';
 
 class DocumentoUsuario extends Documento{
 	
-	public function __construct(){}
+	private $_id_usuario_empresa;
 	
-	public function select($id_documento_usuario=null,$id_usuario){
+	public function __construct($id_usuario_empresa){
+		$this->_id_usuario_empresa = $id_usuario_empresa;
+	}
+	
+	
+	public function select($id_documento_usuario=null){
 		try{
 			$where = '';
 			$sql   = "
-					SELECT du.*, d.descricao FROM documento_usuario_empresa du 
+					SELECT 
+						du.id_documento_usuario_empresa, 
+						du.id_documento,
+						DATE_FORMAT(du.data,'%d-%m-%Y') AS data,
+						d.descricao FROM documento_usuario_empresa du 
 					LEFT JOIN documento d on d.id_documento = du.id_documento
+					WHERE du.id_usuario_empresa = {$this->_id_usuario_empresa}
 				";
 			
-			if($id_documento_usuario){
-				$sql.= " WHERE du.id_documento_usuario_empresa = $id_documento_usuario";
+			if(!empty($id_documento_usuario)){
+				$sql.= " AND du.id_documento_usuario_empresa = $id_documento_usuario";
 			}
-			if($id_usuario){
-				$sql.= " WHERE du.id_usuario_empresa = $id_usuario";
-			}
+			$sql.= " ORDER by du.data";
+			
 			$this->Connect();
 			
-			$response 	= array();
+			$response = array();
+			$result = $this->_mysqli->multi_query($sql);
+		 	
 		 	if($result = $this->_mysqli->use_result()){
 	            while($row = $result->fetch_assoc()){
-	            	$response[$row['id_coluna']] = $row;
+	            	$response[] = $row;
 	            }
 	        }
-	        return (count($response) == 1) ? $response[0] : $response;
+	        return $response;
 		}catch(Exception $erro){
 			die($erro->getMessage());
 		}
 	}
 	
 	public function loadDoc($id_documento_usuario){
-		$this->_documento = $this->select($id_documento_usuario);
-		$this->_colunas   = $this->getValues($id_documento_usuario);
+		$doc = $this->select($id_documento_usuario);
+		$this->_documento = $doc[0];
+		$this->setData($this->_documento['data']);
+		$this->_colunas   = $this->getDocCols($this->_documento['id_documento']);
+		
+		$this->loadValues($id_documento_usuario);
 	}
 	
-	public function newDoc($id_usuario_empresa, $id_documento, $data=null){
-		parent::newDoc($id_documento);
-		$this->_documento->data = $data;
-		$this->_documento->id_usuario_empresa  = $id_usuario_empresa;
-	}
-	
-	public function getValues($id_documento_usuario){
-		try{
+	public function getDataEmUso(){
 			$this->Connect();
 			$sql = "
-					SELECT 
-						dv.id_documento_usuario_empresa_valor,
-						dv.valor,
-						c.codigo,
-						c.descricao 
-					FROM documento_usuario_empresa_valor dv
-					LEFT JOIN coluna c on c.id_coluna = dv.id_coluna
-					WHERE dv.id_documento_usuario_empresa = $id_documento_usuario
+					SELECT DATE_FORMAT(data,'%d-%m-%Y') AS data FROM documento_usuario_empresa
+					WHERE id_documento_usuario_empresa = {$this->_id_usuario_empresa}
 			";
 			$result = $this->_mysqli->multi_query($sql);
         
 			$response 	= array();
 		 	if($result = $this->_mysqli->use_result()){
 	            while($row = $result->fetch_assoc()){
-	            	$response[$row['id_documento_usuario_empresa_valor']] = $row;
+	            	$response[] = $row['data'];
 	            }
 	        }
-	        if(!count($response)){
-	        	throw new Exception("Não há registro de colunas para o documento.");
-	        }
 	        return $response;
+	}
+	
+	public function loadValues($id_documento_usuario){
+		try{
+			$this->Connect();
+			$sql = "
+					SELECT id_coluna, valor FROM documento_usuario_empresa_valor 
+					WHERE id_documento_usuario_empresa = $id_documento_usuario 
+			";
+			$result = $this->_mysqli->multi_query($sql);
+        
+			$response 	= array();
+		 	if($result = $this->_mysqli->use_result()){
+	            while($row = $result->fetch_assoc()){
+	            	$this->setValue($row['id_coluna'], $row['valor']);
+	            }
+	        }
 			
 		}catch(Exception $erro){
 			die($erro->getMessage());
@@ -79,32 +95,42 @@ class DocumentoUsuario extends Documento{
 		try{
 			$this->Connect();
 			$this->_mysqli->autocommit(FALSE);
+			$insert = false;
 			
-			if(!empty($this->_documento->id_documento_usuario_empresa)){
-				$this->deletar($this->_documento->id_documento_usuario_empresa);
-			}
-			
-			$sql = "
+			if(!isset($this->_documento['id_documento_usuario_empresa'])){
+				$insert = true;
+				$sql = "
 					INSERT INTO documento_usuario_empresa
 					(id_usuario_empresa,id_documento,data)
 					values
-					('{$this->_documento->id_usuario_empresa}',{$this->_documento->id_documento},'{$this->_documento->data}')
+					({$this->_id_usuario_empresa},{$this->_documento['id_documento']},'{$this->_data}')
 				";
+				
+				$this->_mysqli->query($sql);
+				$id_documento_usuario_empresa = $this->_mysqli->insert_id;
+				
+			}else{
+				$id_documento_usuario_empresa = $this->_documento['id_documento_usuario_empresa'];
+			}
 			
-			$this->_mysqli->query($sql);
-			$id_documento_usuario = $this->_mysqli->insert_id;
-			
-			$sql = '';
 			foreach($this->_colunas AS $coluna):
-				$sql.= "
+				$valor = !empty($coluna['valor']) ? str_replace(',','.',str_replace('.','',$coluna['valor'])) : 0; 
+				
+				if($insert){
+					$sql = "
 						INSERT INTO documento_usuario_empresa_valor
 						(id_documento_usuario_empresa,id_coluna,valor)
 						values
-						($id_documento_usuario,{$coluna['id_coluna']},{$coluna['valor']});
+						($id_documento_usuario_empresa,{$coluna['id_coluna']},$valor);
 					";
+				}else{
+					$sql = "
+						UPDATE documento_usuario_empresa_valor set valor = $valor 
+						WHERE id_coluna = {$coluna['id_coluna']} AND id_documento_usuario_empresa = $id_documento_usuario_empresa
+					";
+				}
+				$this->_mysqli->query($sql);
 			endforeach;
-			
-			$this->_mysqli->multi_query($sql);
 			
 			$this->_mysqli->commit();
 			$this->_mysqli->close();
@@ -118,7 +144,7 @@ class DocumentoUsuario extends Documento{
 		}
 	}
 	
-	public function deletar($id_documento_usuario){
-		$this->_mysqli->query("DELETE FROM documento_usuario_empresa WHERE id_documento_usuario_empresa = $id_documento_usuario");
+	public function deletar($id_documento_usuario_empresa){
+		$this->_mysqli->query("DELETE FROM documento_usuario_empresa WHERE id_documento_usuario_empresa = $id_documento_usuario_empresa");
 	}
 }

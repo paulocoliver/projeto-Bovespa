@@ -3,6 +3,7 @@
 	
 	$ch = !empty($_GET['ch']) ? $_GET['ch'] : 'a';
 	$empresa = new Empresa();
+	$empresa->createDLL();
 	$response = $empresa->getEmpresas($ch);
 	$listaCh  = $empresa->getLista();
 ?>
