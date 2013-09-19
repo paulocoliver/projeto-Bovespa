@@ -1,3 +1,10 @@
+<?php 
+	include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Auth/Usuario.php';
+	if(!isset($auth)){
+		$auth = new Auth_Usuario();
+	}
+	$authenticated = $auth->isAuthenticated();
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -41,13 +48,21 @@
 					<ul class="nav">
 						<li class=""><a href="/index.php">Lista de Empresas</a></li>
 						<li class=""><a href="/relatorio-financeiro.php">Relatórios Financeiros</a></li>
-						<li class=""><a href="/usuario/index.php">Minha Empresa</a></li>
 					</ul>	
+					
+					<ul class="nav" style="float:right">
+						<?php if($authenticated): ?>
+							<li class=""><a href="/usuario/index.php">Minha Empresa</a></li>
+							<li class=""><a href="/usuario/logout.php">Logout</a></li>
+						<?php else:?>
+							<li class=""><a href="/usuario/login.php">Login / Cadastrar</a></li>
+						<?php endif;?>
+					</ul>
           		</div>
 			</div>
 		</div>
     </div>
 </div>
 
-<div id="content">
+<div id="content" >
 	<div>

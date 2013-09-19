@@ -28,9 +28,9 @@ CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento` (
 
 ENGINE = InnoDB
 
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 3
 
-DEFAULT CHARACTER SET = latin1;
+DEFAULT CHARACTER SET = utf8;
 
 
 
@@ -50,27 +50,27 @@ CREATE  TABLE IF NOT EXISTS `projeto_db`.`coluna` (
 
   `codigo` VARCHAR(30) NOT NULL ,
 
-  `descricao` TEXT NOT NULL ,
+  `descricao` MEDIUMTEXT NOT NULL ,
 
   PRIMARY KEY (`id_coluna`) ,
 
   INDEX `fk_coluna_documento1_idx` (`id_documento` ASC) ,
 
-  CONSTRAINT `fk_coluna_documento1`
+  CONSTRAINT `fk_coluna_documento`
 
     FOREIGN KEY (`id_documento` )
 
     REFERENCES `projeto_db`.`documento` (`id_documento` )
 
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
 
     ON UPDATE NO ACTION)
 
 ENGINE = InnoDB
 
-AUTO_INCREMENT = 6
+AUTO_INCREMENT = 458
 
-DEFAULT CHARACTER SET = latin1;
+DEFAULT CHARACTER SET = utf8;
 
 
 
@@ -95,6 +95,244 @@ CREATE  TABLE IF NOT EXISTS `projeto_db`.`empresa` (
   `situacao_registro` VARCHAR(45) NOT NULL ,
 
   PRIMARY KEY (`cvm`) )
+
+ENGINE = InnoDB
+
+DEFAULT CHARACTER SET = utf8;
+
+
+
+
+
+-- -----------------------------------------------------
+
+-- Table `projeto_db`.`documento_empresa`
+
+-- -----------------------------------------------------
+
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_empresa` (
+
+  `id_documento_empresa` INT(11) NOT NULL AUTO_INCREMENT ,
+
+  `cvm` INT(11) NOT NULL ,
+
+  `id_documento` INT(11) NOT NULL ,
+
+  `data` DATE NOT NULL ,
+
+  PRIMARY KEY (`id_documento_empresa`) ,
+
+  INDEX `fk_empresa_has_tabela_empresa1_idx` (`cvm` ASC) ,
+
+  INDEX `fk_documento_empresa_documento1_idx` (`id_documento` ASC) ,
+
+  CONSTRAINT `fk_documento_empresa_documento`
+
+    FOREIGN KEY (`id_documento` )
+
+    REFERENCES `projeto_db`.`documento` (`id_documento` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION,
+
+  CONSTRAINT `fk_documento_empresa_empresa`
+
+    FOREIGN KEY (`cvm` )
+
+    REFERENCES `projeto_db`.`empresa` (`cvm` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION)
+
+ENGINE = InnoDB
+
+AUTO_INCREMENT = 37
+
+DEFAULT CHARACTER SET = utf8;
+
+
+
+
+
+-- -----------------------------------------------------
+
+-- Table `projeto_db`.`documento_empresa_valor`
+
+-- -----------------------------------------------------
+
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_empresa_valor` (
+
+  `id_documento_empresa_valor` INT(11) NOT NULL AUTO_INCREMENT ,
+
+  `id_documento_empresa` INT(11) NOT NULL ,
+
+  `id_coluna` INT(11) NOT NULL ,
+
+  `valor` FLOAT(20,2) NOT NULL DEFAULT 0 ,
+
+  `total` FLOAT(20,2) NOT NULL DEFAULT 0 ,
+
+  `valor_ano_anterior` FLOAT(20,2) NOT NULL DEFAULT 0 ,
+
+  `total_ano_anterior` FLOAT(20,2) NOT NULL DEFAULT 0 ,
+
+  PRIMARY KEY (`id_documento_empresa_valor`) ,
+
+  INDEX `fk_documento_empresa_has_coluna_coluna1_idx` (`id_coluna` ASC) ,
+
+  INDEX `fk_documento_empresa_has_coluna_documento_empresa1_idx` (`id_documento_empresa` ASC) ,
+
+  CONSTRAINT `fk_documento_empresa_valor_coluna`
+
+    FOREIGN KEY (`id_coluna` )
+
+    REFERENCES `projeto_db`.`coluna` (`id_coluna` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION,
+
+  CONSTRAINT `fk_documento_empresa_valor_documento_empresa`
+
+    FOREIGN KEY (`id_documento_empresa` )
+
+    REFERENCES `projeto_db`.`documento_empresa` (`id_documento_empresa` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION)
+
+ENGINE = InnoDB
+
+AUTO_INCREMENT = 1723
+
+DEFAULT CHARACTER SET = utf8;
+
+
+
+
+
+-- -----------------------------------------------------
+
+-- Table `projeto_db`.`usuario_empresa`
+
+-- -----------------------------------------------------
+
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`usuario_empresa` (
+
+  `id_usuario_empresa` INT(11) NOT NULL AUTO_INCREMENT ,
+
+  `razao_social` VARCHAR(100) NOT NULL ,
+
+  `cnpj` VARCHAR(20) NOT NULL ,
+
+  `email` VARCHAR(100) NOT NULL ,
+
+  `senha` VARCHAR(20) NOT NULL ,
+
+  PRIMARY KEY (`id_usuario_empresa`) )
+
+ENGINE = InnoDB
+
+DEFAULT CHARACTER SET = utf8;
+
+
+
+
+
+-- -----------------------------------------------------
+
+-- Table `projeto_db`.`documento_usuario_empresa`
+
+-- -----------------------------------------------------
+
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_usuario_empresa` (
+
+  `id_documento_usuario_empresa` INT(11) NOT NULL AUTO_INCREMENT ,
+
+  `id_documento` INT(11) NOT NULL ,
+
+  `id_usuario_empresa` INT(11) NOT NULL ,
+
+  `data` DATE NOT NULL ,
+
+  PRIMARY KEY (`id_documento_usuario_empresa`) ,
+
+  INDEX `fk_documento_has_usuario_empresa_usuario_empresa1_idx` (`id_usuario_empresa` ASC) ,
+
+  INDEX `fk_documento_has_usuario_empresa_documento1_idx` (`id_documento` ASC) ,
+
+  CONSTRAINT `fk_documento_usuario_empresa_documento`
+
+    FOREIGN KEY (`id_documento` )
+
+    REFERENCES `projeto_db`.`documento` (`id_documento` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION,
+
+  CONSTRAINT `fk_documento_usuario_empresa_usuario_empresa`
+
+    FOREIGN KEY (`id_usuario_empresa` )
+
+    REFERENCES `projeto_db`.`usuario_empresa` (`id_usuario_empresa` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION)
+
+ENGINE = InnoDB
+
+DEFAULT CHARACTER SET = utf8;
+
+
+
+
+
+-- -----------------------------------------------------
+
+-- Table `projeto_db`.`documento_usuario_empresa_valor`
+
+-- -----------------------------------------------------
+
+CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_usuario_empresa_valor` (
+
+  `id_documento_usuario_empresa_valor` INT(11) NOT NULL AUTO_INCREMENT ,
+
+  `id_coluna` INT(11) NOT NULL ,
+
+  `id_documento_usuario_empresa` INT(11) NOT NULL ,
+
+  `valor` FLOAT(20,2) NOT NULL DEFAULT 0 ,
+
+  PRIMARY KEY (`id_documento_usuario_empresa_valor`) ,
+
+  INDEX `fk_coluna_has_documento_usuario_empresa_documento_usuario_e_idx` (`id_documento_usuario_empresa` ASC) ,
+
+  INDEX `fk_coluna_has_documento_usuario_empresa_coluna1_idx` (`id_coluna` ASC) ,
+
+  CONSTRAINT `fk_documento_usuario_empresa_coluna`
+
+    FOREIGN KEY (`id_coluna` )
+
+    REFERENCES `projeto_db`.`coluna` (`id_coluna` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION,
+
+  CONSTRAINT `fk_documento_usuario_empresa_documento_usuario_empresa`
+
+    FOREIGN KEY (`id_documento_usuario_empresa` )
+
+    REFERENCES `projeto_db`.`documento_usuario_empresa` (`id_documento_usuario_empresa` )
+
+    ON DELETE CASCADE
+
+    ON UPDATE NO ACTION)
 
 ENGINE = InnoDB
 
@@ -140,234 +378,6 @@ DEFAULT CHARACTER SET = utf8;
 
 
 
-
-
--- -----------------------------------------------------
-
--- Table `projeto_db`.`documento_empresa`
-
--- -----------------------------------------------------
-
-CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_empresa` (
-
-  `id_documento_empresa` INT(11) NOT NULL AUTO_INCREMENT ,
-
-  `cvm` INT(11) NOT NULL ,
-
-  `id_documento` INT(11) NOT NULL ,
-
-  `data` DATE NOT NULL ,
-
-  PRIMARY KEY (`id_documento_empresa`) ,
-
-  INDEX `fk_empresa_has_tabela_empresa1_idx` (`cvm` ASC) ,
-
-  INDEX `fk_documento_empresa_documento1_idx` (`id_documento` ASC) ,
-
-  CONSTRAINT `fk_empresa_has_tabela_empresa1`
-
-    FOREIGN KEY (`cvm` )
-
-    REFERENCES `projeto_db`.`empresa` (`cvm` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE CASCADE,
-
-  CONSTRAINT `fk_documento_empresa_documento1`
-
-    FOREIGN KEY (`id_documento` )
-
-    REFERENCES `projeto_db`.`documento` (`id_documento` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION)
-
-ENGINE = InnoDB
-
-AUTO_INCREMENT = 3
-
-DEFAULT CHARACTER SET = utf8;
-
-
-
-
-
--- -----------------------------------------------------
-
--- Table `projeto_db`.`documento_empresa_valor`
-
--- -----------------------------------------------------
-
-CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_empresa_valor` (
-
-  `id_documento_empresa_valor` INT NOT NULL AUTO_INCREMENT ,
-
-  `id_documento_empresa` INT(11) NOT NULL ,
-
-  `id_coluna` INT(11) NOT NULL ,
-
-  `valor` FLOAT(20,2) NOT NULL ,
-
-  INDEX `fk_documento_empresa_has_coluna_coluna1_idx` (`id_coluna` ASC) ,
-
-  INDEX `fk_documento_empresa_has_coluna_documento_empresa1_idx` (`id_documento_empresa` ASC) ,
-
-  PRIMARY KEY (`id_documento_empresa_valor`) ,
-
-  CONSTRAINT `fk_documento_empresa_has_coluna_documento_empresa1`
-
-    FOREIGN KEY (`id_documento_empresa` )
-
-    REFERENCES `projeto_db`.`documento_empresa` (`id_documento_empresa` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION,
-
-  CONSTRAINT `fk_documento_empresa_has_coluna_coluna1`
-
-    FOREIGN KEY (`id_coluna` )
-
-    REFERENCES `projeto_db`.`coluna` (`id_coluna` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION)
-
-ENGINE = InnoDB
-
-DEFAULT CHARACTER SET = utf8;
-
-
-
-
-
--- -----------------------------------------------------
-
--- Table `projeto_db`.`usuario_empresa`
-
--- -----------------------------------------------------
-
-CREATE  TABLE IF NOT EXISTS `projeto_db`.`usuario_empresa` (
-
-  `id_usuario_empresa` INT NOT NULL AUTO_INCREMENT ,
-
-  `razao_social` VARCHAR(100) NOT NULL ,
-
-  `cnpj` VARCHAR(20) NOT NULL ,
-
-  `email` VARCHAR(100) NOT NULL ,
-
-  `senha` VARCHAR(20) NOT NULL ,
-
-  PRIMARY KEY (`id_usuario_empresa`) )
-
-ENGINE = InnoDB;
-
-
-
-
-
--- -----------------------------------------------------
-
--- Table `projeto_db`.`documento_usuario_empresa`
-
--- -----------------------------------------------------
-
-CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_usuario_empresa` (
-
-  `id_documento_usuario_empresa` INT NOT NULL AUTO_INCREMENT ,
-
-  `id_documento` INT(11) NOT NULL ,
-
-  `id_usuario_empresa` INT NOT NULL ,
-
-  `data` DATE NOT NULL ,
-
-  INDEX `fk_documento_has_usuario_empresa_usuario_empresa1_idx` (`id_usuario_empresa` ASC) ,
-
-  INDEX `fk_documento_has_usuario_empresa_documento1_idx` (`id_documento` ASC) ,
-
-  PRIMARY KEY (`id_documento_usuario_empresa`) ,
-
-  CONSTRAINT `fk_documento_has_usuario_empresa_documento1`
-
-    FOREIGN KEY (`id_documento` )
-
-    REFERENCES `projeto_db`.`documento` (`id_documento` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION,
-
-  CONSTRAINT `fk_documento_has_usuario_empresa_usuario_empresa1`
-
-    FOREIGN KEY (`id_usuario_empresa` )
-
-    REFERENCES `projeto_db`.`usuario_empresa` (`id_usuario_empresa` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION)
-
-ENGINE = InnoDB
-
-DEFAULT CHARACTER SET = latin1;
-
-
-
-
-
--- -----------------------------------------------------
-
--- Table `projeto_db`.`documento_usuario_empresa_valor`
-
--- -----------------------------------------------------
-
-CREATE  TABLE IF NOT EXISTS `projeto_db`.`documento_usuario_empresa_valor` (
-
-  `id_documento_usuario_empresa_valor` INT NOT NULL AUTO_INCREMENT ,
-
-  `id_coluna` INT(11) NOT NULL ,
-
-  `id_documento_usuario_empresa` INT NOT NULL ,
-
-  `valor` FLOAT(20,2) NOT NULL ,
-
-  INDEX `fk_coluna_has_documento_usuario_empresa_documento_usuario_e_idx` (`id_documento_usuario_empresa` ASC) ,
-
-  INDEX `fk_coluna_has_documento_usuario_empresa_coluna1_idx` (`id_coluna` ASC) ,
-
-  PRIMARY KEY (`id_documento_usuario_empresa_valor`) ,
-
-  CONSTRAINT `fk_coluna_has_documento_usuario_empresa_coluna1`
-
-    FOREIGN KEY (`id_coluna` )
-
-    REFERENCES `projeto_db`.`coluna` (`id_coluna` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION,
-
-  CONSTRAINT `fk_coluna_has_documento_usuario_empresa_documento_usuario_emp1`
-
-    FOREIGN KEY (`id_documento_usuario_empresa` )
-
-    REFERENCES `projeto_db`.`documento_usuario_empresa` (`id_documento_usuario_empresa` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION)
-
-ENGINE = InnoDB
-
-DEFAULT CHARACTER SET = latin1;
-
-
-
 USE `projeto_db` ;
 
 
@@ -379,3 +389,4 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+

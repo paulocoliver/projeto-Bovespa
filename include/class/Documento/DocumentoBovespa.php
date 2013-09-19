@@ -42,11 +42,61 @@ class DocumentoBovespa extends Documento{
 		}
 	}
 	
+	public function setValue($key, $valor, $total, $valor_ano_anterior, $total_ano_anterior){
+		if(empty($this->_colunas[$key])){
+			throw new Exception("Nenhuma coluna encontrada com a chave $key");
+		}
+		$this->_colunas[$key]['valor'] = $valor;
+		$this->_colunas[$key]['total'] = $total;
+		$this->_colunas[$key]['valor_ano_anterior'] = $valor_ano_anterior;
+		$this->_colunas[$key]['total_ano_anterior'] = $total_ano_anterior;
+	}
+	
+	public function setValueByCode( $id_documento, $codigo, $descricao, $valor, $total, $valor_ano_anterior, $total_ano_anterior){
+		foreach( $this->_colunas AS $key => $value ):
+			if(trim($this->_colunas[$key]['codigo']) == trim($codigo)){
+				$this->setValue($key,$valor, $total,$valor_ano_anterior,$total_ano_anterior);	
+				return;
+			}
+		endforeach;
+		$key = $this->insertColuna($id_documento, $codigo, $descricao);
+		$this->setValue($key,$valor, $total,$valor_ano_anterior,$total_ano_anterior);
+	}
+	
+	public function insertColuna($id_documento, $codigo, $descricao){
+		
+		try{
+			$this->Connect();
+			if(mb_detect_encoding($descricao) == 'UTF-8'){
+				$descricao = utf8_decode($descricao);
+			}
+			$sql = "
+				INSERT INTO coluna
+				(id_documento,codigo,descricao)
+				values
+				($id_documento, '$codigo','$descricao');
+			";
+			
+			$this->_mysqli->query($sql);
+			$id_coluna = $this->_mysqli->insert_id;
+			
+			$this->_colunas[$id_coluna] = array(
+											'id_coluna'    => $id_coluna,
+											'id_documento' => $id_documento,
+											'codigo' 	   => $codigo,
+											'descricao'    => $descricao
+										);
+			return $id_coluna;
+		}catch(Exception $erro){
+			die($erro->getMessage());
+		}
+	}
+	
 	public function selectByLink(){
 		try{
 			$this->Connect();
 			$result = $this->_mysqli->query("SELECT id_documento_empresa FROM documento_empresa WHERE cvm = {$this->_cvm} AND data = '{$this->_data}'");
-		
+			
 			if(!$result->num_rows){
 				return null;
 			}
@@ -59,11 +109,12 @@ class DocumentoBovespa extends Documento{
 	}
 	
 	public function loadDoc($id_documento_empresa){
+		
 		$doc = $this->select($id_documento_empresa);
 		$this->_documento = $doc[0];
 		$this->setData($this->_documento['data']);
-		$this->_colunas = $this->getDocCols($this->_documento['id_documento']);
 		
+		$this->_colunas = $this->getDocCols($this->_documento['id_documento']);
 		$this->loadValues($id_documento_empresa);
 	}
 	
@@ -71,7 +122,7 @@ class DocumentoBovespa extends Documento{
 		try{
 			$this->Connect();
 			$sql = "
-					SELECT id_coluna, valor FROM documento_empresa_valor 
+					SELECT id_coluna, valor, total, valor_ano_anterior, total_ano_anterior FROM documento_empresa_valor 
 					WHERE id_documento_empresa = $id_documento_empresa 
 			";
 			$result = $this->_mysqli->multi_query($sql);
@@ -79,13 +130,23 @@ class DocumentoBovespa extends Documento{
 			$response 	= array();
 		 	if($result = $this->_mysqli->use_result()){
 	            while($row = $result->fetch_assoc()){
-	            	$this->setValue($row['id_coluna'], $row['valor']);
+	            	$this->setValue(
+	            		$row['id_coluna'],
+	            		$row['valor'],
+	            		$row['total'],
+	            		$row['valor_ano_anterior'],
+	            		$row['total_ano_anterior']
+	            	);
 	            }
 	        }
 			
 		}catch(Exception $erro){
 			die($erro->getMessage());
 		}
+	}
+	
+	private function _tratarNum($num){
+		return !empty($num) ? str_replace(',','.',str_replace('.','',$num)) : 'NULL'; 
 	}
 	
 	public function inserir(){
@@ -111,18 +172,25 @@ class DocumentoBovespa extends Documento{
 			}
 			
 			foreach($this->_colunas AS $coluna):
-				$valor = !empty($coluna['valor']) ? str_replace(',','.',str_replace('.','',$coluna['valor'])) : 0; 
+				$valor = $this->_tratarNum($coluna['valor']);
+				$total = $this->_tratarNum($coluna['total']); 
+				$valor_ano_anterior = $this->_tratarNum($coluna['valor_ano_anterior']);
+				$total_ano_anterior = $this->_tratarNum($coluna['total_ano_anterior']);
 				
 				if($insert){
 					$sql = "
 						INSERT INTO documento_empresa_valor
-						(id_documento_empresa,id_coluna,valor)
+						(id_documento_empresa,id_coluna,valor, total, valor_ano_anterior, total_ano_anterior)
 						values
-						($id_documento_empresa,{$coluna['id_coluna']},$valor);
+						($id_documento_empresa,{$coluna['id_coluna']},$valor, $total, $valor_ano_anterior, $total_ano_anterior );
 					";
 				}else{
 					$sql = "
-						UPDATE documento_empresa_valor set valor = $valor 
+						UPDATE documento_empresa_valor set 
+							valor = $valor,
+							total = $total,
+							valor_ano_anterior = $valor_ano_anterior,
+							total_ano_anterior = $total_ano_anterior
 						WHERE id_coluna = {$coluna['id_coluna']} AND id_documento_empresa = $id_documento_empresa
 					";
 				}

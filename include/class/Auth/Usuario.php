@@ -3,7 +3,7 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Connection/Abstract.php';
 
 class Auth_Usuario extends Connection{
 	
-	private $_usuario;
+	private $_usuario = null;
 	
 	public function __construct(){
 		@session_start();

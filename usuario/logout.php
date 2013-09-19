@@ -1,4 +1,4 @@
 <?php
 session_start();
-$_SERVER['usuario']=null;
+$_SESSION['usuario']=null;
 header("location:/usuario/login.php");

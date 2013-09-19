@@ -24,16 +24,8 @@ class Documento extends Connection{
 		$this->_colunas[$key]['valor'] = $valor;
 	}
 	
-	public function setValueByCode($codigo,$valor){
-		
-		foreach( $this->_colunas AS $key => $value ):
-			if($value['codigo'] == $codigo){
-				$this->_colunas[$key]['valor'] = $valor;
-				return;
-			}
-		endforeach;
-		
-		throw new Exception("Nenhuma coluna encontrada com a chave $codigo : $valor");
+	public function getData(){
+		return $this->_data;
 	}
 	
 	public function setData($data){
@@ -72,7 +64,7 @@ class Documento extends Connection{
 	public function getDocCols($id_documento){
 		try{
 			$this->Connect();
-			$sql = "SELECT * FROM coluna WHERE id_documento = $id_documento";
+			$sql = "SELECT * FROM coluna WHERE id_documento = $id_documento ORDER BY codigo";
 			$result = $this->_mysqli->multi_query($sql);
         
 			$response 	= array();
@@ -80,10 +72,10 @@ class Documento extends Connection{
 	            while($row = $result->fetch_assoc()){
 	            	$response[$row['id_coluna']] = $row;
 	            	$response[$row['id_coluna']]['valor'] = '';
+	            	$response[$row['id_coluna']]['total'] = '';
+	            	$response[$row['id_coluna']]['valor_ano_anterior'] = '';
+	            	$response[$row['id_coluna']]['total_ano_anterior'] = '';
 	            }
-	        }
-	        if(!count($response)){
-	        	throw new Exception("Não há registro de colunas para o documento.");
 	        }
 	        return $response;
 			

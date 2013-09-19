@@ -57,7 +57,7 @@ class DocumentoUsuario extends Documento{
 			$this->Connect();
 			$sql = "
 					SELECT DATE_FORMAT(data,'%d-%m-%Y') AS data FROM documento_usuario_empresa
-					WHERE id_documento_usuario_empresa = {$this->_id_usuario_empresa}
+					WHERE id_usuario_empresa = {$this->_id_usuario_empresa}
 			";
 			$result = $this->_mysqli->multi_query($sql);
         
@@ -105,7 +105,6 @@ class DocumentoUsuario extends Documento{
 					values
 					({$this->_id_usuario_empresa},{$this->_documento['id_documento']},'{$this->_data}')
 				";
-				
 				$this->_mysqli->query($sql);
 				$id_documento_usuario_empresa = $this->_mysqli->insert_id;
 				

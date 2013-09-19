@@ -34,6 +34,18 @@ img{
 	min-height:600px;
 	margin:0 auto;
 }
+#menu-left ul li a{
+	padding:5px;
+}
+#menu-left{
+	float:left;
+	width:200px;
+	margin-right:10px;
+}
+#usuario-content{
+	float:left;
+	width:950px;
+}
 #menu{
 	width:100%;
 	background-color:#313131;

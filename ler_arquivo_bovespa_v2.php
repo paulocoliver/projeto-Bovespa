@@ -50,8 +50,10 @@ if ($zip) {
 $response = array();
 foreach ($new_content AS $k => $conta ):
 	foreach($conta AS $linha ){
+		
 		if(((int)$linha['cod_conta']) == 3){
 			$response[] = array(
+							'descricao' => $linha['title'],
 							'codigo' => $linha['cod_conta'],
 							'val_1'  => $linha['val_1'],
 							'val_2'  => $linha['val_2'],

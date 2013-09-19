@@ -41,7 +41,7 @@ while ($zip_entry1 = zip_read($zip1)){
 	}
 }
 
-function getValue($row){
+function getValue(&$row){
 	for($i = 0; $i < 7 ; $i++  ){
 		$value = (float)$row->{"ValorConta$i"};
 		if($value != 0){
@@ -56,13 +56,15 @@ ksort($new_content);
 foreach ($new_content AS $k1 => $row1):
 		ksort($row1);
 		foreach ($row1 AS $row3):
-			$numeroConta = $row3->PlanoConta->NumeroConta;
+//			$numeroConta = $row3->PlanoConta->NumeroConta;
+//		 	echo "INSERT INTO coluna (id_documento,codigo,descricao) values (1,'{$numeroConta}','{$row3->DescricaoConta1}');<Br />";
 			$response[] = array(
-					'codigo' => $numeroConta,
-					'val_1'  => getValue(&$row3),
-					'val_2'  => getValue(&$row3),
-					'val_3'  => getValue(&$row3),
-					'val_4'  => getValue(&$row3)
+					'descricao' => (string)$row3->DescricaoConta1,
+					'codigo' => (string)$row3->PlanoConta->NumeroConta,
+					'val_1'  => getValue($row3),
+					'val_2'  => getValue($row3),
+					'val_3'  => getValue($row3),
+					'val_4'  => getValue($row3)
 			);
 		endforeach; 
 endforeach;
