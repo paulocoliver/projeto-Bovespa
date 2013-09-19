@@ -12,7 +12,7 @@ if(!empty($_GET['id'])){
 		$datasEmUso = $documento->getDataEmUso();
 		$datas = array();
 		
-		for($i = 2010 ; $i <= date("Y") ; $i++ ){
+		for($i = 2011 ; $i <= date("Y") ; $i++ ){
 			if(!in_array("31-03-$i", $datasEmUso)){
 				$datas[]= "31-03-$i";
 			}
@@ -36,6 +36,7 @@ if(!empty($_POST)){
 	foreach($_POST AS $key => $valor){
 		$documento->setValue($key, $valor);
 	}
+	
 	$documento->inserir();
 	header("location:/usuario/index.php");
 }
@@ -78,9 +79,9 @@ $(document).ready(function(){
 		<table id="lista_dre">
 			<tbody>
 				<tr>
-					<th style="width:100px;">Código</th>
+					<th style="width:60px;">Código</th>
 					<th>Descricao</th>
-					<th style="width:100px;">Valor</th>
+					<th style="width:60px;">Valor</th>
 				</tr>
 				<?php 
 					if(is_array($colunas)):

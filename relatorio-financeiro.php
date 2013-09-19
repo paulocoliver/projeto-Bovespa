@@ -43,6 +43,10 @@ include('include/layout/header.php')
 .movie-synopsis { font-size: 12px; }
 .nav-tabs > li > a {font-size: 12px;}
 /*.tab-pane {float: left;}*/
+.col-valor{
+	text-align:right !important;
+	width:60px;
+}
 </style>
 
 <div class="container">
@@ -82,7 +86,7 @@ include('include/layout/header.php')
 	        img.on("load", function(evt) {
 	        	$.ajax({
 					type: "GET",
-					url: "/ajax-result.php?id_link="+e.val,
+					url: "/include/ajax/ajax-result.php?id_link="+e.val,
 					dataType: "html"
 				}).done(function(data) {
 					$("#relatorio-trimestre").html(data);

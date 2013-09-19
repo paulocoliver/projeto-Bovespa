@@ -15,7 +15,7 @@ $(document).ready(function() {
         minimumInputLength: 1,
         id: 'cvm',
         ajax: {
-            url: "/ajax-empresas.php",
+            url: "/include/ajax/ajax-empresas.php",
             dataType: 'json',
             quietMillis: 100,
             data: function (term, page) { // page is the one-based page number tracked by Select2
@@ -33,7 +33,7 @@ $(document).ready(function() {
         initSelection: function(element, callback) {
             var cvm = $(element).val();                
             if (cvm !== "") {
-                $.ajax("/ajax-empresas.php?cvm="+cvm, {
+                $.ajax("/include/ajax/ajax-empresas.php?cvm="+cvm, {
                     data: {},
                     dataType: "json"
                 }).done(function(data) { 
@@ -51,7 +51,7 @@ $(document).ready(function() {
     function getLinksAjax(cvm) {
     	$.ajax({
 			type: "GET",
-			url: "/ajax-links.php?cvm="+cvm,
+			url: "/include/ajax/ajax-links.php?cvm="+cvm,
 			dataType: "json"
 		}).done(function(json) {
 			if (json.sucess == true) {

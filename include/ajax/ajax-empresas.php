@@ -1,5 +1,5 @@
 <?php 
-include_once 'include/class/Bovespa/Empresa.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Bovespa/Empresa.php';
 	
 $ch  = !empty($_GET['q']) ? $_GET['q'] : null;
 $cvm = !empty($_GET['cvm']) ? $_GET['cvm'] : null;

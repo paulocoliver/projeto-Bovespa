@@ -42,16 +42,6 @@ class DocumentoBovespa extends Documento{
 		}
 	}
 	
-	public function setValue($key, $valor, $total, $valor_ano_anterior, $total_ano_anterior){
-		if(empty($this->_colunas[$key])){
-			throw new Exception("Nenhuma coluna encontrada com a chave $key");
-		}
-		$this->_colunas[$key]['valor'] = $valor;
-		$this->_colunas[$key]['total'] = $total;
-		$this->_colunas[$key]['valor_ano_anterior'] = $valor_ano_anterior;
-		$this->_colunas[$key]['total_ano_anterior'] = $total_ano_anterior;
-	}
-	
 	public function setValueByCode( $id_documento, $codigo, $descricao, $valor, $total, $valor_ano_anterior, $total_ano_anterior){
 		foreach( $this->_colunas AS $key => $value ):
 			if(trim($this->_colunas[$key]['codigo']) == trim($codigo)){

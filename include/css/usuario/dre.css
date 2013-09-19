@@ -47,4 +47,13 @@
 #datas-dre label{
 	margin-right:10px;
 }
-
+.col-valor{
+	text-align:right;
+	width:60px;
+}
+.col-description td	{
+	text-align:center;
+}
+.col-description{
+	background-color:rgb(245, 245, 127);
+}

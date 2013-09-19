@@ -1,5 +1,5 @@
 <?php
-include_once 'include/class/Bovespa/Link.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Bovespa/Link.php';
 try{
 	$cvm = !empty($_GET['cvm']) ? $_GET['cvm'] : null;
 	$link = new Link();

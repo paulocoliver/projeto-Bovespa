@@ -1,6 +1,6 @@
 <?php
 $new_content = array();
-$zip = zip_open('files/'.$filename_open.'.WTL');
+$zip = zip_open($_SERVER['DOCUMENT_ROOT'].'/files/'.$filename_open.'.WTL');
 if ($zip) {
 	while ($zip_entry = zip_read($zip)) {
 		$name = zip_entry_name($zip_entry);
@@ -20,12 +20,6 @@ if ($zip) {
 					$val_2 = (double) trim(substr($row, 90, 15));
 					$val_3 = (double) trim(substr($row, 105, 15));
 					$val_4 = (double) trim(substr($row, 120, 15));
-					
-					
-					$val_1 = !empty($val_1) ? number_format($val_1, 0, '', '.') : '';
-					$val_2 = !empty($val_2) ? number_format($val_2, 0, '', '.') : '';
-					$val_3 = !empty($val_3) ? number_format($val_3, 0, '', '.') : '';
-					$val_4 = !empty($val_4) ? number_format($val_4, 0, '', '.') : '';
 					
 					$new_content[$name][] = array(
 						'data' => $data,

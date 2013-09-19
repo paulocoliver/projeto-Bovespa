@@ -17,11 +17,14 @@ class Documento extends Connection{
 		return '';
 	}
 	
-	public function setValue($key,$valor){
+	public function setValue($key, $valor, $total=0, $valor_ano_anterior=0, $total_ano_anterior=0){
 		if(empty($this->_colunas[$key])){
 			throw new Exception("Nenhuma coluna encontrada com a chave $key");
 		}
 		$this->_colunas[$key]['valor'] = $valor;
+		$this->_colunas[$key]['total'] = $total;
+		$this->_colunas[$key]['valor_ano_anterior'] = $valor_ano_anterior;
+		$this->_colunas[$key]['total_ano_anterior'] = $total_ano_anterior;
 	}
 	
 	public function getData(){

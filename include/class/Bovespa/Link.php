@@ -37,6 +37,22 @@ class Link extends Base{
 		return NULL;
 	}
 	
+	public function getLinkByCVM($cvm,$data=null){
+		
+		$this->Connect();
+		
+		$sql = "SELECT * FROM link WHERE cvm = '$cvm'";
+		if($data){
+			$sql .= " AND data = '$data' limit 1";
+		}
+		$result = $this->_mysqli->multi_query($sql);
+		
+		if($result = $this->_mysqli->use_result()){
+			return $result->fetch_object();
+		}
+		return NULL;
+	}
+	
 	public function inserir( $output, $cvm ){
 		try{
 			$this->Connect();
