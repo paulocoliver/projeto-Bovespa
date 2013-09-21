@@ -19,9 +19,9 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/include/layout/header.php';
 	<a id="adicionar-dre" href="/usuario/dre.php">Adicionar DRE</a>
 	<div style="clear:both"></div>
 	
-	<?php include_once $_SERVER['DOCUMENT_ROOT'].'/include/layout/menu.php';?>
+	<?php //include_once $_SERVER['DOCUMENT_ROOT'].'/include/layout/menu.php';?>
 		
-	<div id="usuario-content">
+	
 		<table id="lista_dre">
 			<tbody>
 				<tr>
@@ -50,6 +50,6 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/include/layout/header.php';
 				?>
 			</tbody>
 		</table>
-	</div>
+	
 </div>
 <?php include_once $_SERVER['DOCUMENT_ROOT'].'/include/layout/footer.php';?>

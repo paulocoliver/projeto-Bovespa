@@ -1,4 +1,5 @@
-<?php 
+<?php
+	date_default_timezone_set('America/Sao_Paulo');
 	include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Auth/Usuario.php';
 	if(!isset($auth)){
 		$auth = new Auth_Usuario();
@@ -48,11 +49,11 @@
 					<ul class="nav">
 						<li class=""><a href="/index.php">Lista de Empresas</a></li>
 						<li class=""><a href="/relatorio-financeiro.php">Relatórios Financeiros</a></li>
-					</ul>	
-					
+					</ul>
 					<ul class="nav" style="float:right">
 						<?php if($authenticated): ?>
-							<li class=""><a href="/usuario/index.php">Minha Empresa</a></li>
+							<li class=""><a href="/usuario/comparar.php">Comparar Empresas</a></li>
+							<li class=""><a href="/usuario/index.php">Minhas DRE's</a></li>
 							<li class=""><a href="/usuario/logout.php">Logout</a></li>
 						<?php else:?>
 							<li class=""><a href="/usuario/login.php">Login / Cadastrar</a></li>
