@@ -9,10 +9,18 @@ class Link extends Base{
 		return parent::getOutput("http://www.bmfbovespa.com.br/cias-listadas/empresas-listadas/HistoricoFormularioReferencia.aspx?codigoCVM=$cvm&tipo=itr&ano=0&idioma=pt-br");
 	}
 	
-	public function getLinks( $cvm ){
+	public function getLinks( $cvm = null, $inicial = null, $final = null){
 		
 		$this->Connect();
-		$sql = "SELECT link.id_link, link.cvm, link.descricao, link.link, DATE_FORMAT(link.data,'%d/%m/%Y') AS data FROM link WHERE cvm = $cvm ORDER BY link.data DESC";
+		$sql = "SELECT link.id_link, link.cvm, link.descricao, link.link, DATE_FORMAT(link.data,'%d/%m/%Y') AS data FROM link";
+		if($cvm){
+			$sql .= " WHERE cvm = $cvm";
+		}
+		$sql.= " ORDER BY link.data DESC";
+		if($inicial){	
+			$sql .= " LIMIT {$inicial},".( $final ? $final : '20000'); 
+		}
+					
 		$result 	= $this->_mysqli->multi_query($sql);
 		$response 	= array();
 		

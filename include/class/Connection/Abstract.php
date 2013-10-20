@@ -4,7 +4,7 @@ abstract class Connection{
 	protected $_mysqli;
 	protected $_domain 	= 'localhost';
 	protected $_user 	= 'root';
-	protected $_password  = '';
+	protected $_password  = 'Paul0405';
 	
 	public function __construct(){}
 	

@@ -1,13 +1,14 @@
 <?php
 $new_content = array();
-$zip1 = zip_open($_SERVER['DOCUMENT_ROOT'].'/files/'.$filename_open.'.zip');
+$root = $_SERVER['DOCUMENT_ROOT'].'/files/';
+
+$zip1 = zip_open($root.$filename_open.'.zip');
 while ($zip_entry1 = zip_read($zip1)){
-	$zip_nome1 = zip_entry_name($zip_entry1);
+	@$zip_nome1 = zip_entry_name($zip_entry1);
 	$filesize1 = zip_entry_filesize($zip_entry1);
 	if (strpos($zip_nome1, '.itr')) {
-		$contents1 = zip_entry_read($zip_entry1, $filesize1);
+		$contents1 = zip_entry_read($zip_entry1, $filesize1);		
 		
-		$root = $_SERVER['DOCUMENT_ROOT'].'/files/';
 		$hedef_yol = $root.$zip_nome1;
 		touch($hedef_yol);
 		$yeni_dosya = fopen($hedef_yol, 'w+');
@@ -38,8 +39,10 @@ while ($zip_entry1 = zip_read($zip1)){
 			}
 			zip_close($zip);
 		}
+		@unlink($hedef_yol);
 	}
 }
+@unlink($root.$filename_open.'.zip');
 
 function getValue($row){
 	

@@ -72,8 +72,9 @@ class BuscarDocumento{
 					include 'ler_arquivo_bovespa_v2.php';
 				}
 		
-				foreach ($response AS $linha):
-					$documento->setValueByCode(
+				if(!empty($response)):
+				 	foreach ($response AS $linha):
+						$documento->setValueByCode(
 							1,
 							"{$linha['codigo']}",
 							"{$linha['descricao']}",
@@ -81,10 +82,10 @@ class BuscarDocumento{
 							$linha['val_2'],
 							$linha['val_3'],
 							$linha['val_4']
-					);
-				endforeach;
-				$documento->inserir();
-				
+						);
+					endforeach;
+					$documento->inserir();
+				endif;
 			}else{
 				$documento->loadDoc($id_documento_bovespa);
 			}

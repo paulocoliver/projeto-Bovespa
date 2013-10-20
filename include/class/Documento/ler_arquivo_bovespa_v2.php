@@ -1,6 +1,7 @@
 <?php
 $new_content = array();
-$zip = zip_open($_SERVER['DOCUMENT_ROOT'].'/files/'.$filename_open.'.WTL');
+$root = $_SERVER['DOCUMENT_ROOT'].'/files/';
+$zip = zip_open($root.$filename_open.'.WTL');
 if ($zip) {
 	while ($zip_entry = zip_read($zip)) {
 		$name = zip_entry_name($zip_entry);
@@ -38,6 +39,7 @@ if ($zip) {
 	}
 	zip_close($zip);
 }
+@unlink($root.$filename_open.'.WTL');
 ?>
 
 <?php 
