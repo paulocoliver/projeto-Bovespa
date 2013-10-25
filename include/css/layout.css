@@ -69,8 +69,7 @@ img{
 	transition: background-color 200ms linear;
 }
 #lista-empresas{
-	width: 100%;
-	margin:0 auto;
+	margin-top:10px;
 	border-collapse: collapse;
 	border-spacing: 0;
 }
@@ -87,6 +86,13 @@ img{
 	border: 1px solid lightgray;
 	padding: 0 5px;
 	line-height: 35px;
+}
+#listaEmpresas > div > input{
+	display:inline-block;
+	margin-right:10px;
+}
+#listaEmpresas > div > label{
+	display:inline-block;
 }
 #paginacao{
 	text-align: center;

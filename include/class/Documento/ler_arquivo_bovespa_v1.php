@@ -3,8 +3,13 @@ $new_content = array();
 $root = $_SERVER['DOCUMENT_ROOT'].'/files/';
 
 $zip1 = zip_open($root.$filename_open.'.zip');
-while ($zip_entry1 = zip_read($zip1)){
-	@$zip_nome1 = zip_entry_name($zip_entry1);
+@$zip_entry1 = zip_read($zip1);
+
+do{
+	if(!$zip_entry1){
+		throw new Exception('Arquivo nao encontrado ', '05');
+	}
+	$zip_nome1 = zip_entry_name($zip_entry1);
 	$filesize1 = zip_entry_filesize($zip_entry1);
 	if (strpos($zip_nome1, '.itr')) {
 		$contents1 = zip_entry_read($zip_entry1, $filesize1);		
@@ -41,7 +46,7 @@ while ($zip_entry1 = zip_read($zip1)){
 		}
 		@unlink($hedef_yol);
 	}
-}
+}while (@$zip_entry1 = zip_read($zip1));
 @unlink($root.$filename_open.'.zip');
 
 function getValue($row){

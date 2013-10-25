@@ -49,6 +49,7 @@ class DocumentoBovespa extends Documento{
 				return;
 			}
 		endforeach;
+		
 		$key = $this->insertColuna($id_documento, $codigo, $descricao);
 		$this->setValue($key,$valor, $total,$valor_ano_anterior,$total_ano_anterior);
 	}
@@ -56,19 +57,37 @@ class DocumentoBovespa extends Documento{
 	public function insertColuna($id_documento, $codigo, $descricao){
 		
 		try{
-			$this->Connect();
+			
 			if(mb_detect_encoding($descricao) == 'UTF-8'){
 				$descricao = utf8_decode($descricao);
 			}
-			$sql = "
-				INSERT INTO coluna
-				(id_documento,codigo,descricao)
-				values
-				($id_documento, '$codigo','$descricao');
-			";
+			$descricao = trim($descricao);
 			
-			$this->_mysqli->query($sql);
-			$id_coluna = $this->_mysqli->insert_id;
+			$this->Connect();
+			
+			$sql = "SELECT * FROM coluna where codigo = '$codigo' or descricao = '$descricao'";
+			$result  = $this->_mysqli->query($sql);
+			if($result->num_rows > 0){
+				
+				$result = $result->fetch_assoc();
+			
+				$id_coluna    = $result['id_coluna'];
+				$id_documento = $result['id_documento'];
+				$codigo 	  = $result['codigo'];
+				$descricao    = $result['descricao'];
+				
+			}else{
+				
+				$sql = "
+					INSERT INTO coluna
+					(id_documento,codigo,descricao)
+					values
+					($id_documento, '$codigo','$descricao');
+				";
+				
+				$this->_mysqli->query($sql);
+				$id_coluna = $this->_mysqli->insert_id;
+			}
 			
 			$this->_colunas[$id_coluna] = array(
 											'id_coluna'    => $id_coluna,

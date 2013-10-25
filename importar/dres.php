@@ -1,9 +1,7 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'].'/include/class/Bovespa/Link.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Documento/BuscarDocumento.php';
-
 if(!empty($_POST)){
-	
 	try{
 		if(empty($_POST['id_link'])){
 			throw new Exception('Link não informado');
@@ -31,14 +29,14 @@ $links = $link->getLinks();
 <script type="text/javascript">
 
 var fila = <?php echo json_encode($links)?>;
-var count = new Array();
-var process = 20;
+var count = 0;
+var process = 50;
 var importar;
 var request = new Array();
 var partes;
 
 importar = function (piece, num, call){
-	$('#status').text('importando...');
+	
 	request[piece] = $.ajax({
 	     type    : 'POST',
 	     dataType: 'json', 
@@ -47,33 +45,37 @@ importar = function (piece, num, call){
 		 },
 		 //async: false,
 	     success : function(response){
-			if(response.success){
-				num++;
-				$('#download-concluido').text(count++);
 
-				if(call < partes && fila[num]){
-					importar(piece, num, call++);
-				}else{
-					$('#status').text('concluido');
-				}
-				
+	    	num++;
+			$('#download-concluido').text(count++);
+			if(call < partes && typeof fila[num] != 'undefined'){
+				importar(piece, num, ++call);
 			}else{
-				$('#status').text('ERRO:'+ response.msg);
+				$('#status').text('concluido');
+			}
+			
+			if(response.success == false){
+				console.log(response.msg);
 			}
 	     },
 	     error:function(data){
+	    	 cancelar();
 	    	 $('#status').text('ERRO: Operação cancelada');
+	    	 if(data.responseText){
+		    	 alert(data.responseText);
+	    	 }
 	     }
 	});
 };
 
 function iniciar(){
 	
+	$('#status').text('importando...');
 	$('#iniciar').attr('disabled',true);
 	$('#cancelar').attr('disabled',false);
 	
 	partes = parseInt(fila.length/process);
-	
+
 	for(var i = 0 ; i < process ; i++){
 		importar(i, i*partes, 0);	
 	}
@@ -118,6 +120,9 @@ function cancelar(){
 				
 				<button id="iniciar" onclick="iniciar(this)">Iniciar</button>
 				<button id="cancelar" onclick="cancelar(this)" disabled="disabled">Cancelar</button>
+				
+				<div id="historico">
+				</div>
 			</div>
 		</div>
 	</body>

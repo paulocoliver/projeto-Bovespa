@@ -2,7 +2,7 @@
 include $_SERVER['DOCUMENT_ROOT'].'/include/class/Bovespa/Empresa.php';
 include $_SERVER['DOCUMENT_ROOT'].'/include/class/Bovespa/Link.php';
 
-$step = !empty($_GET['step']) ? $_GET['step'] : 0;
+$step = isset($_GET['step']) ? $_GET['step'] : 0;
 $link 	 = new Link();
 $empresa = new Empresa();
 
@@ -16,8 +16,4 @@ foreach($empresas AS $empresa):
 //	exit;
 endforeach;
 
-// $step++;
-// if($step < count($lista)){
-// 	header("Location: {$_SERVER['SCRIPT_NAME']}?step=$step");
-// }
 die('Processo concluido!');

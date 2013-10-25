@@ -3,24 +3,24 @@ include_once 'Base.php';
 
 class Link extends Base{
 
-	private $_data_atualizacao = '2010-01-01';
+	private $_data_atualizacao = '2011-01-01';
 	
 	public function getOutput( $cvm ){
 		return parent::getOutput("http://www.bmfbovespa.com.br/cias-listadas/empresas-listadas/HistoricoFormularioReferencia.aspx?codigoCVM=$cvm&tipo=itr&ano=0&idioma=pt-br");
 	}
 	
-	public function getLinks( $cvm = null, $inicial = null, $final = null){
+	public function getLinks( $cvm = null, $apartir = null, $ate = 1000){
 		
 		$this->Connect();
 		$sql = "SELECT link.id_link, link.cvm, link.descricao, link.link, DATE_FORMAT(link.data,'%d/%m/%Y') AS data FROM link";
 		if($cvm){
 			$sql .= " WHERE cvm = $cvm";
 		}
-		$sql.= " ORDER BY link.data DESC";
-		if($inicial){	
-			$sql .= " LIMIT {$inicial},".( $final ? $final : '20000'); 
+		$sql.= " ORDER BY link.data DESC"; 
+		if($apartir !== null){
+			$sql.= " LIMIT $apartir, $ate";
 		}
-					
+		
 		$result 	= $this->_mysqli->multi_query($sql);
 		$response 	= array();
 		

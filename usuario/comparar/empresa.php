@@ -1,5 +1,5 @@
 <?php
-include_once 'auth.php';
+include_once '../auth.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Documento/DocumentoUsuario.php';
 
 $documento = new DocumentoUsuario($auth->getUsuario('id_usuario_empresa'));

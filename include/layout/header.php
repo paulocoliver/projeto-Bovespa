@@ -52,7 +52,8 @@
 					</ul>
 					<ul class="nav" style="float:right">
 						<?php if($authenticated): ?>
-							<li class=""><a href="/usuario/comparar.php">Comparar Empresas</a></li>
+							<li class=""><a href="/usuario/comparar/segmento.php">Comparar Segmento</a></li>
+							<li class=""><a href="/usuario/comparar/empresa.php">Comparar Empresas</a></li>
 							<li class=""><a href="/usuario/index.php">Minhas DRE's</a></li>
 							<li class=""><a href="/usuario/logout.php">Logout</a></li>
 						<?php else:?>

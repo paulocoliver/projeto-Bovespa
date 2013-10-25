@@ -1,7 +1,7 @@
 <?php 
 	include_once 'include/class/Bovespa/Empresa.php';
 	
-	$ch = !empty($_GET['ch']) ? $_GET['ch'] : 'a';
+	$ch = isset($_GET['ch']) && strlen($_GET['ch']) ? $_GET['ch'] : 'a';
 	$empresa = new Empresa();
 	$empresa->createDLL();
 	$response = $empresa->getEmpresas($ch);

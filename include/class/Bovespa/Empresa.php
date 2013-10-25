@@ -3,11 +3,11 @@ include_once 'Base.php';
 
 class Empresa extends Base{
 
-	public function getEmpresas($ch = 'A', $importar = false){
+	public function getEmpresas($ch = null, $importar = false){
 		
 		$this->Connect();
 		$sql = "SELECT * FROM empresa WHERE ".($importar ? "situacao_registro not like '%Cancelado%'" : 'count_links > 0');
-		if($ch){
+		if( $ch != null ){
 			$sql .= " AND nome like '$ch%'";
 		}
 		$sql .= " ORDER BY nome";
