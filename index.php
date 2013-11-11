@@ -7,12 +7,10 @@
 	$response = $empresa->getEmpresas($ch);
 	$listaCh  = $empresa->getLista();
 ?>
-
 <?php 
 	$titlePage = 'Lista de empresas';
 	include('include/layout/header.php')
 ?>
-
 <div class="container">
 	<div class="row ">
 		<div class="span12">
