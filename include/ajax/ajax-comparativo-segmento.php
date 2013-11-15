@@ -7,7 +7,13 @@ include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Auth/Usuario.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Bovespa/Link.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Helper/Function.php';
 
+include_once $_SERVER['DOCUMENT_ROOT'].'/include/class/Documento/BuscarDocumento.php';
+
 try{
+	
+	$grafico_x = $_POST['grafico_col_x'];
+	$grafico_y = $_POST['grafico_col_y'];
+	
 	$helper = new Helper_Function();
 	$id_documento_usuario = $_POST['documento_usuario'];
 	$cvm = $_POST['cvm'];
@@ -24,10 +30,40 @@ try{
 	$documento->newDoc(1);
 	
 	$segmento = new Segmento();
-	$segmento->mediaEmpresas($documento,$cvm);
+	$segmento->mediaEmpresas($documento, $cvm);
 	
 	$colSegmento = $documento->getColunas();
 	$colUsuario = $docUsuario->getColunas();
+	
+	
+	$grafico_res = array();
+	$empresasSeg = $segmento->selectEmpresa($_POST['id_segmento']);
+	foreach ($empresasSeg as $empresaSeg) {
+		$link = new Link();
+		$link = $link->getLinkByCVM($empresaSeg['cvm'], $docUsuario->getData());
+		if($link == null){
+			continue;
+		} else {
+			$buscarDoc  = new BuscarDocumento();
+			$docBovespa = $buscarDoc->getDocumento($link->id_link);
+			$cols = $docBovespa->getColunas();
+			
+			$cols[$grafico_x]['descricao'];
+			
+			$val_x = !empty($cols[$grafico_x]['valor']) ? $cols[$grafico_x]['valor'] : 0;
+			$val_y = !empty($cols[$grafico_y]['valor']) ? $cols[$grafico_y]['valor'] : 0;
+		}
+		
+		$grafico_res[] = array(
+			'cvm' => $empresaSeg['cvm'],	
+			'nome' => $empresaSeg['nome'],
+			'x' => number_format($val_x, 2, '.', ''),
+			'y' => number_format($val_y, 2, '.', '')
+		);
+	}
+	
+	$grafico_x_title = utf8_encode(str_replace("'", '', $colSegmento[$grafico_x]['descricao']));
+	$grafico_y_title = utf8_encode(str_replace("'", '', $colSegmento[$grafico_y]['descricao']));
 	
 }catch(Exception $erro ){
 	die('ERRO : '.$erro->getMessage());
@@ -59,6 +95,10 @@ switch($mes):
 	break;
 endswitch;
 ?>
+
+ <div id="chart_div" style="width: 100%; height: 600px;"></div>
+
+
 <table id="lista_dre">
 	<tbody>
 		<tr>
@@ -144,3 +184,49 @@ endswitch;
 		?>
 	</tbody>
 </table>
+
+
+<script type="text/javascript">
+	//google.setOnLoadCallback(drawChart);
+	function drawChart() {
+        /*var data = google.visualization.arrayToDataTable([
+          ['ID', 'Life Expectancy', 'Fertility Rate', 'Region'],
+          ['CAN',    80.66,              1.67,      'CAN'],
+          ['DEU',    79.84,              1.36,      'DEU'],
+          ['DNK',    78.6,               1.84,      'DNK'],
+          ['EGY',    72.73,              2.78,      'EGY'],
+          ['GBR',    80.05,              2,         'GBR'],
+          ['IRN',    72.49,              1.7,       'IRN'],
+          ['IRQ',    68.09,              4.77,      'IRQ'],
+          ['ISR',    81.55,              2.96,      'ISR'],
+          ['RUS',    68.6,               1.54,      'RUS'],
+          ['USA',    78.09,              2.05,      'USA']
+        ]);*/
+
+
+		
+        
+
+        var data = google.visualization.arrayToDataTable([
+         	['CVM', '<?php echo $grafico_x_title ?>', '<?php echo $grafico_y_title ?>', 'Nome'],
+		<?php 
+		foreach ($grafico_res as $graf) {
+			echo "['".$graf['cvm']."',".$graf['x'].",".$graf['y'].", '".$graf['nome']."'],";
+		}
+		?>
+		]);
+		
+        
+
+        var options = {
+          title: 'Grafico',
+          hAxis: {title: '<?php echo $grafico_x_title ?>'},
+          vAxis: {title: '<?php echo $grafico_y_title ?>'},
+          bubble: {textStyle: {fontSize: 11}}
+        };
+
+        var chart = new google.visualization.BubbleChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+	}
+	drawChart();
+</script>

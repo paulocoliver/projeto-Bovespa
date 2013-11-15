@@ -18,7 +18,7 @@ try{
 	$docUsuario->loadDoc($id_documento_usuario);
 	
 	$link = new Link();
-	$link = $link->getLinkByCVM($cvm,$docUsuario->getData());
+	$link = $link->getLinkByCVM($cvm, $docUsuario->getData());
 	if($link == null){
 		throw new Exception("A empresa não contém registro de dres para esta data.");
 	}
